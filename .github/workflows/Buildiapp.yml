@@ -1,14 +1,43 @@
-name: Print Hello World
+name: Build and Setup Pipeline
 
 on:
   push:
     branches:
-      - main
-  workflow_dispatch: # Allows manual triggering of the workflow
+      - main # Trigger pipeline on push to the main branch
+  pull_request:
+    branches:
+      - main # Trigger pipeline on pull requests to the main branch
 
 jobs:
-  hello-world:
-    runs-on: [self-hosted, Librechat] # Specifies the runner name
+  build:
+    # Specify the runner environment
+    runs-on: [self-hosted, Librechat] # Use your self-hosted runner with the name Librechat
+
     steps:
-      - name: Print Hello World
-        run: echo "Hello World"
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # Replace with the required Node.js version for your project
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # Step 4: Copy and modify the .env file
+      - name: Prepare .env file
+        run: |
+          cp .env.example .env
+          sed -i 's|MONGO_URI=mongodb://127.0.0.1:27017/LibreChat|MONGO_URI=mongodb://127.0.0.1:27017/LibreChat|' .env
+
+      # Step 5: Build the frontend
+      - name: Build Frontend
+        run: npm run frontend
+
+      # Step 6: Build the backend
+      - name: Build Backend
+        run: npm run backend
