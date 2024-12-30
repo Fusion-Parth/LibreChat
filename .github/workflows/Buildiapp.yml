@@ -1,16 +1,10 @@
 name: Build and Setup Pipeline
 
 on:
-  push:
-    branches:
-      - main # Trigger pipeline on push to the main branch
-  pull_request:
-    branches:
-      - main # Trigger pipeline on pull requests to the main branch
+  workflow_dispatch: # Trigger manually on demand
 
 jobs:
   build:
-    # Specify the runner environment
     runs-on: [self-hosted, Librechat] # Use your self-hosted runner with the name Librechat
 
     steps:
@@ -30,9 +24,10 @@ jobs:
 
       # Step 4: Copy and modify the .env file
       - name: Prepare .env file
+        shell: pwsh # Use PowerShell for compatibility on Windows
         run: |
-          cp .env.example .env
-          sed -i 's|MONGO_URI=mongodb://127.0.0.1:27017/LibreChat|MONGO_URI=mongodb://127.0.0.1:27017/LibreChat|' .env
+          Copy-Item .env.example .env
+          (Get-Content .env) -replace 'MONGO_URI=mongodb://127.0.0.1:27017/LibreChat', 'MONGO_URI=mongodb://127.0.0.1:27017/LibreChat' | Set-Content .env
 
       # Step 5: Build the frontend
       - name: Build Frontend
