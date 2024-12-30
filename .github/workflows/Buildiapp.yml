@@ -1,0 +1,14 @@
+name: Print Hello World
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allows manual triggering of the workflow
+
+jobs:
+  hello-world:
+    runs-on: [self-hosted, Librechat] # Specifies the runner name
+    steps:
+      - name: Print Hello World
+        run: echo "Hello World"
