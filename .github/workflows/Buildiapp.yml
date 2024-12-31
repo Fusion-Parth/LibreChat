@@ -7,10 +7,6 @@ jobs:
   build:
     runs-on: [self-hosted, Librechat] # Use your self-hosted runner with the name Librechat
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
