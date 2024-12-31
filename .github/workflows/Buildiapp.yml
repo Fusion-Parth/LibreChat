@@ -1,8 +1,11 @@
-name: Librechat
+name: Build and Setup Pipeline
 
 on:
-  workflow_dispatch:
-    # This makes the workflow run on demand
+  workflow_dispatch: # Trigger manually on demand
+
+jobs:
+  build:
+    runs-on: [self-hosted, Librechat] # Use your self-hosted runner with the name Librechat
 
 jobs:
   build:
