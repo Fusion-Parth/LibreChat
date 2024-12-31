@@ -21,18 +21,3 @@ jobs:
       # Step 3: Install dependencies
       - name: Install dependencies
         run: npm ci
-
-      # Step 4: Copy and modify the .env file
-      - name: Prepare .env file
-        shell: pwsh # Use PowerShell for compatibility on Windows
-        run: |
-          Copy-Item .env.example .env
-          (Get-Content .env) -replace 'MONGO_URI=mongodb://127.0.0.1:27017/LibreChat', 'MONGO_URI=mongodb://127.0.0.1:27017/LibreChat' | Set-Content .env
-
-      # Step 5: Build the frontend
-      - name: Build Frontend
-        run: npm run frontend
-
-      # Step 6: Build the backend
-      - name: Build Backend
-        run: npm run backend
