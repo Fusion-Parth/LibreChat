@@ -1,23 +1,35 @@
-name: Build and Setup Pipeline
+name: Librechat
 
 on:
-  workflow_dispatch: # Trigger manually on demand
+  workflow_dispatch:
+    # This makes the workflow run on demand
 
 jobs:
   build:
-    runs-on: [self-hosted, Librechat] # Use your self-hosted runner with the name Librechat
+    runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout the repository
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js environment
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18' # Replace with the required Node.js version for your project
+          node-version: '18'
 
-      # Step 3: Install dependencies
       - name: Install dependencies
-        run: npm ci
+        run: npm install
+
+      - name: Build data provider
+        run: npm run build:data-provider
+
+      - name: Build MCP
+        run: npm run build:mcp
+
+      - name: Navigate to client folder and build client
+        run: |
+          cd client
+          npm run build
+
+      - name: Copy .env.example to .env
+        run: cp .env.example .env
